@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Reading Adventure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f0f9ff;
+            touch-action: manipulation;
+        }
+        .kids-font { font-family: 'Fredoka One', cursive; }
+        .card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .btn-bounce:active { transform: scale(0.9); }
+        .success-glow { box-shadow: 0 0 20px #4ade80; }
+        .listen-pulse { animation: pulse-red 2s infinite; }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4 overflow-hidden select-none">
+
+    <!-- Progress Header -->
+    <div class="fixed top-4 w-full max-w-md px-6 flex justify-between items-center z-10">
+        <div class="bg-white rounded-full px-4 py-2 shadow-md border-2 border-yellow-400">
+            <span class="text-xl font-bold text-yellow-600" id="progressText">1 / 100</span>
+        </div>
+        <div class="flex gap-2">
+            <div class="bg-white rounded-full px-4 py-2 shadow-md border-2 border-green-400">
+                <span class="text-xl font-bold text-green-600">⭐ <span id="starCount">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Area -->
+    <main class="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 border-b-8 border-gray-200 relative">
+        
+        <!-- Category Badge -->
+        <div id="categoryBadge" class="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-500 text-white px-6 py-1 rounded-full text-lg font-bold shadow-lg">
+            CH Sound
+        </div>
+
+        <!-- Word Display -->
+        <div id="wordCard" class="flex flex-col items-center justify-center min-h-[250px] mb-8">
+            <h1 id="mainWord" class="kids-font text-7xl md:text-8xl text-blue-600 tracking-wide mb-4 text-center">back</h1>
+            <p id="feedbackText" class="text-xl font-bold text-gray-400 h-8">Press the buttons to play!</p>
+        </div>
+
+        <!-- Interaction Buttons -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <button onclick="listenToWord()" class="btn-bounce flex flex-col items-center justify-center bg-orange-400 hover:bg-orange-500 text-white rounded-2xl py-6 shadow-lg border-b-4 border-orange-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+                <span class="text-xl font-bold uppercase">Listen</span>
+            </button>
+
+            <button id="speakBtn" onclick="startSpeaking()" class="btn-bounce flex flex-col items-center justify-center bg-red-400 hover:bg-red-500 text-white rounded-2xl py-6 shadow-lg border-b-4 border-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+                <span class="text-xl font-bold uppercase">Say it</span>
+            </button>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex items-center justify-between gap-4">
+            <button onclick="prevWord()" class="btn-bounce bg-gray-200 hover:bg-gray-300 text-gray-600 rounded-full p-4 flex-1 font-bold text-xl border-b-4 border-gray-400">
+                BACK
+            </button>
+            <button onclick="nextWord()" class="btn-bounce bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 flex-[2] font-bold text-xl shadow-lg border-b-4 border-blue-700">
+                NEXT WORD
+            </button>
+        </div>
+    </main>
+
+    <!-- Success Message Box (Hidden by default) -->
+    <div id="modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl scale-0 transition-transform duration-300" id="modalContent">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="kids-font text-3xl text-green-600 mb-2">Great Job!</h2>
+            <p id="modalMsg" class="text-xl text-gray-600 mb-6">You said it perfectly!</p>
+            <button onclick="closeModal()" class="w-full bg-green-500 hover:bg-green-600 text-white rounded-2xl py-4 font-bold text-xl shadow-lg border-b-4 border-green-700">
+                CONTINUE
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            // CK words
+            {word: "back", sound: "ck"}, {word: "check", sound: "ck"}, {word: "duck", sound: "ck"}, {word: "luck", sound: "ck"}, {word: "neck", sound: "ck"},
+            {word: "pick", sound: "ck"}, {word: "rock", sound: "ck"}, {word: "sock", sound: "ck"}, {word: "sick", sound: "ck"}, {word: "tack", sound: "ck"},
+            {word: "black", sound: "ck"}, {word: "clock", sound: "ck"}, {word: "snack", sound: "ck"}, {word: "brick", sound: "ck"}, {word: "truck", sound: "ck"},
+            // CH words
+            {word: "chat", sound: "ch"}, {word: "chip", sound: "ch"}, {word: "chop", sound: "ch"}, {word: "rich", sound: "ch"}, {word: "much", sound: "ch"},
+            {word: "such", sound: "ch"}, {word: "chin", sound: "ch"}, {word: "chess", sound: "ch"}, {word: "check", sound: "ch"}, {word: "bench", sound: "ch"},
+            {word: "lunch", sound: "ch"}, {word: "beach", sound: "ch"}, {word: "catch", sound: "ch"}, {word: "match", sound: "ch"}, {word: "patch", sound: "ch"},
+            // TH words
+            {word: "the", sound: "th"}, {word: "they", sound: "th"}, {word: "this", sound: "th"}, {word: "that", sound: "th"}, {word: "then", sound: "th"},
+            {word: "them", sound: "th"}, {word: "with", sound: "th"}, {word: "moth", sound: "th"}, {word: "path", sound: "th"}, {word: "bath", sound: "th"},
+            {word: "thin", sound: "th"}, {word: "thick", sound: "th"}, {word: "math", sound: "th"}, {word: "tooth", sound: "th"}, {word: "think", sound: "th"},
+            // SH words
+            {word: "ship", sound: "sh"}, {word: "shop", sound: "sh"}, {word: "shut", sound: "sh"}, {word: "fish", sound: "sh"}, {word: "dish", sound: "sh"},
+            {word: "wish", sound: "sh"}, {word: "rush", sound: "sh"}, {word: "dash", sound: "sh"}, {word: "shell", sound: "sh"}, {word: "shine", sound: "sh"},
+            {word: "sheet", sound: "sh"}, {word: "shark", sound: "sh"}, {word: "trash", sound: "sh"}, {word: "brush", sound: "sh"}, {word: "flash", sound: "sh"},
+            // WH words
+            {word: "when", sound: "wh"}, {word: "whip", sound: "wh"}, {word: "white", sound: "wh"}, {word: "whale", sound: "wh"}, {word: "wheel", sound: "wh"},
+            {word: "wheat", sound: "wh"}, {word: "whisk", sound: "wh"}, {word: "while", sound: "wh"}, {word: "which", sound: "wh"}, {word: "whack", sound: "wh"},
+            // PH words
+            {word: "phone", sound: "ph"}, {word: "photo", sound: "ph"}, {word: "graph", sound: "ph"}, {word: "phase", sound: "ph"}, {word: "phlox", sound: "ph"},
+            {word: "dolphin", sound: "ph"}, {word: "trophy", sound: "ph"}, {word: "phantom", sound: "ph"}, {word: "orphan", sound: "ph"}, {word: "sphere", sound: "ph"},
+            // NG words
+            {word: "ring", sound: "ng"}, {word: "sing", sound: "ng"}, {word: "song", sound: "ng"}, {word: "long", sound: "ng"}, {word: "wing", sound: "ng"},
+            {word: "king", sound: "ng"}, {word: "hang", sound: "ng"}, {word: "bang", sound: "ng"}, {word: "lung", sound: "ng"}, {word: "sung", sound: "ng"},
+            // QU words
+            {word: "quit", sound: "qu"}, {word: "quiz", sound: "qu"}, {word: "quick", sound: "qu"}, {word: "quilt", sound: "qu"}, {word: "queen", sound: "qu"},
+            {word: "quack", sound: "qu"}, {word: "quest", sound: "qu"}, {word: "quill", sound: "qu"}, {word: "quart", sound: "qu"}, {word: "quite", sound: "qu"}
+        ];
+
+        let currentIndex = 0;
+        let stars = 0;
+        const mainWordEl = document.getElementById('mainWord');
+        const feedbackEl = document.getElementById('feedbackText');
+        const progressEl = document.getElementById('progressText');
+        const starEl = document.getElementById('starCount');
+        const categoryBadge = document.getElementById('categoryBadge');
+        const speakBtn = document.getElementById('speakBtn');
+
+        // Speech Synthesis
+        const synth = window.speechSynthesis;
+        
+        // Speech Recognition Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase().trim();
+                const target = words[currentIndex].word.toLowerCase();
+                
+                if (transcript.includes(target) || target.includes(transcript)) {
+                    handleSuccess();
+                } else {
+                    handleFailure(transcript);
+                }
+                stopRecognitionUI();
+            };
+
+            recognition.onerror = () => {
+                feedbackEl.textContent = "Oops! Try again.";
+                stopRecognitionUI();
+            };
+
+            recognition.onend = () => {
+                stopRecognitionUI();
+            };
+        }
+
+        function updateDisplay() {
+            const current = words[currentIndex];
+            mainWordEl.textContent = current.word;
+            categoryBadge.textContent = `${current.sound.toUpperCase()} Sound`;
+            progressEl.textContent = `${currentIndex + 1} / ${words.length}`;
+            feedbackEl.textContent = "Press the buttons to play!";
+            feedbackEl.className = "text-xl font-bold text-gray-400 h-8";
+            
+            // Random colors for words
+            const colors = ['text-blue-600', 'text-purple-600', 'text-pink-600', 'text-indigo-600'];
+            mainWordEl.className = `kids-font text-7xl md:text-8xl tracking-wide mb-4 text-center ${colors[currentIndex % colors.length]}`;
+        }
+
+        function listenToWord() {
+            if (synth.speaking) synth.cancel();
+            const utter = new SpeechSynthesisUtterance(words[currentIndex].word);
+            utter.rate = 0.8;
+            utter.pitch = 1.2;
+            synth.speak(utter);
+            
+            // Animation
+            mainWordEl.classList.add('scale-110');
+            setTimeout(() => mainWordEl.classList.remove('scale-110'), 300);
+        }
+
+        function startSpeaking() {
+            if (!recognition) {
+                feedbackEl.textContent = "Voice not supported in this browser.";
+                return;
+            }
+            
+            feedbackEl.textContent = "Listening...";
+            feedbackEl.className = "text-xl font-bold text-red-500 h-8 animate-pulse";
+            speakBtn.classList.add('listen-pulse');
+            recognition.start();
+        }
+
+        function stopRecognitionUI() {
+            speakBtn.classList.remove('listen-pulse');
+        }
+
+        function handleSuccess() {
+            stars++;
+            starEl.textContent = stars;
+            feedbackEl.textContent = "Awesome! Correct!";
+            feedbackEl.className = "text-xl font-bold text-green-500 h-8";
+            
+            document.getElementById('modalMsg').textContent = `You said "${words[currentIndex].word}" perfectly!`;
+            openModal();
+            
+            // Play a happy ping
+            const utter = new SpeechSynthesisUtterance("Great job!");
+            utter.pitch = 1.5;
+            synth.speak(utter);
+        }
+
+        function handleFailure(heard) {
+            feedbackEl.textContent = `Heard: "${heard}" - Try again!`;
+            feedbackEl.className = "text-xl font-bold text-orange-500 h-8";
+        }
+
+        function nextWord() {
+            if (currentIndex < words.length - 1) {
+                currentIndex++;
+                updateDisplay();
+            }
+        }
+
+        function prevWord() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateDisplay();
+            }
+        }
+
+        function openModal() {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => content.classList.add('scale-100'), 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            content.classList.remove('scale-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                nextWord();
+            }, 300);
+        }
+
+        // Init
+        window.onload = updateDisplay;
+
+    </script>
+</body>
+</html>
+
