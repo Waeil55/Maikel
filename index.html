@@ -54,20 +54,17 @@
     <!-- Main Game Area -->
     <main class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6 border-b-8 border-gray-200 dark:border-slate-950 relative mt-12 transition-colors duration-300">
         
-        <!-- Category Badge -->
         <div class="flex justify-center mb-4">
             <div id="categoryBadge" class="bg-purple-500 text-white px-6 py-1 rounded-full text-lg font-bold shadow-md">
                 CH Sound
             </div>
         </div>
 
-        <!-- Word Display -->
         <div id="wordCard" class="flex flex-col items-center justify-center min-h-[250px] mb-6">
             <h1 id="mainWord" class="kids-font tracking-wide mb-2 text-center break-all">back</h1>
             <p id="feedbackText" class="text-xl font-bold text-gray-400 dark:text-gray-500 text-center px-4 h-14 flex items-center">Listen, then try saying it!</p>
         </div>
 
-        <!-- Interaction Buttons -->
         <div class="grid grid-cols-2 gap-4 mb-6">
             <button onclick="listenToWord()" class="btn-bounce flex flex-col items-center justify-center bg-orange-400 hover:bg-orange-500 text-white rounded-2xl py-6 shadow-lg border-b-4 border-orange-600 transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,7 +81,6 @@
             </button>
         </div>
 
-        <!-- Navigation -->
         <div class="flex items-center justify-between gap-4">
             <button onclick="prevWord()" class="btn-bounce bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-600 dark:text-gray-300 rounded-full p-4 flex-1 font-bold text-xl border-b-4 border-gray-400 dark:border-slate-950">
                 BACK
@@ -95,7 +91,6 @@
         </div>
     </main>
 
-    <!-- Success Message Box -->
     <div id="modal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50 p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl scale-0 transition-transform duration-300" id="modalContent">
             <div class="text-6xl mb-4">🎉</div>
@@ -109,26 +104,54 @@
 
     <script>
         const words = [
+            // CK words (30 words)
             {word: "back", sound: "ck"}, {word: "check", sound: "ck"}, {word: "duck", sound: "ck"}, {word: "luck", sound: "ck"}, {word: "neck", sound: "ck"},
             {word: "pick", sound: "ck"}, {word: "rock", sound: "ck"}, {word: "sock", sound: "ck"}, {word: "sick", sound: "ck"}, {word: "tack", sound: "ck"},
             {word: "black", sound: "ck"}, {word: "clock", sound: "ck"}, {word: "snack", sound: "ck"}, {word: "brick", sound: "ck"}, {word: "truck", sound: "ck"},
+            {word: "kick", sound: "ck"}, {word: "lick", sound: "ck"}, {word: "stick", sound: "ck"}, {word: "trick", sound: "ck"}, {word: "block", sound: "ck"},
+            {word: "dock", sound: "ck"}, {word: "flock", sound: "ck"}, {word: "lock", sound: "ck"}, {word: "shock", sound: "ck"}, {word: "smock", sound: "ck"},
+            {word: "stock", sound: "ck"}, {word: "buck", sound: "ck"}, {word: "cluck", sound: "ck"}, {word: "puck", sound: "ck"}, {word: "tuck", sound: "ck"},
+            // CH words (30 words)
             {word: "chat", sound: "ch"}, {word: "chip", sound: "ch"}, {word: "chop", sound: "ch"}, {word: "rich", sound: "ch"}, {word: "much", sound: "ch"},
-            {word: "such", sound: "ch"}, {word: "chin", sound: "ch"}, {word: "chess", sound: "ch"}, {word: "bench", sound: "ch"},
-            {word: "lunch", sound: "ch"}, {word: "beach", sound: "ch"}, {word: "catch", sound: "ch"}, {word: "match", sound: "ch"}, {word: "patch", sound: "ch"},
+            {word: "such", sound: "ch"}, {word: "chin", sound: "ch"}, {word: "chess", sound: "ch"}, {word: "bench", sound: "ch"}, {word: "lunch", sound: "ch"},
+            {word: "beach", sound: "ch"}, {word: "catch", sound: "ch"}, {word: "match", sound: "ch"}, {word: "patch", sound: "ch"}, {word: "chain", sound: "ch"},
+            {word: "chair", sound: "ch"}, {word: "chalk", sound: "ch"}, {word: "champ", sound: "ch"}, {word: "chart", sound: "ch"}, {word: "chase", sound: "ch"},
+            {word: "cheap", sound: "ch"}, {word: "cheat", sound: "ch"}, {word: "cheek", sound: "ch"}, {word: "cheer", sound: "ch"}, {word: "cheese", sound: "ch"},
+            {word: "cherry", sound: "ch"}, {word: "chest", sound: "ch"}, {word: "chew", sound: "ch"}, {word: "chick", sound: "ch"}, {word: "child", sound: "ch"},
+            // TH words (30 words)
             {word: "the", sound: "th"}, {word: "they", sound: "th"}, {word: "this", sound: "th"}, {word: "that", sound: "th"}, {word: "then", sound: "th"},
             {word: "them", sound: "th"}, {word: "with", sound: "th"}, {word: "moth", sound: "th"}, {word: "path", sound: "th"}, {word: "bath", sound: "th"},
             {word: "thin", sound: "th"}, {word: "thick", sound: "th"}, {word: "math", sound: "th"}, {word: "tooth", sound: "th"}, {word: "think", sound: "th"},
+            {word: "thank", sound: "th"}, {word: "third", sound: "th"}, {word: "thumb", sound: "th"}, {word: "thud", sound: "th"}, {word: "thump", sound: "th"},
+            {word: "cloth", sound: "th"}, {word: "fourth", sound: "th"}, {word: "mouth", sound: "th"}, {word: "north", sound: "th"}, {word: "south", sound: "th"},
+            {word: "truth", sound: "th"}, {word: "teeth", sound: "th"}, {word: "thorn", sound: "th"}, {word: "thaw", sound: "th"}, {word: "thatch", sound: "th"},
+            // SH words (30 words)
             {word: "ship", sound: "sh"}, {word: "shop", sound: "sh"}, {word: "shut", sound: "sh"}, {word: "fish", sound: "sh"}, {word: "dish", sound: "sh"},
             {word: "wish", sound: "sh"}, {word: "rush", sound: "sh"}, {word: "dash", sound: "sh"}, {word: "shell", sound: "sh"}, {word: "shine", sound: "sh"},
             {word: "sheet", sound: "sh"}, {word: "shark", sound: "sh"}, {word: "trash", sound: "sh"}, {word: "brush", sound: "sh"}, {word: "flash", sound: "sh"},
+            {word: "shack", sound: "sh"}, {word: "shade", sound: "sh"}, {word: "shake", sound: "sh"}, {word: "shall", sound: "sh"}, {word: "shape", sound: "sh"},
+            {word: "share", sound: "sh"}, {word: "sharp", sound: "sh"}, {word: "shave", sound: "sh"}, {word: "shed", sound: "sh"}, {word: "sheep", sound: "sh"},
+            {word: "shelf", sound: "sh"}, {word: "shirt", sound: "sh"}, {word: "shoe", sound: "sh"}, {word: "short", sound: "sh"}, {word: "show", sound: "sh"},
+            // WH words (20 words)
             {word: "when", sound: "wh"}, {word: "whip", sound: "wh"}, {word: "white", sound: "wh"}, {word: "whale", sound: "wh"}, {word: "wheel", sound: "wh"},
             {word: "wheat", sound: "wh"}, {word: "whisk", sound: "wh"}, {word: "while", sound: "wh"}, {word: "which", sound: "wh"}, {word: "whack", sound: "wh"},
+            {word: "wharf", sound: "wh"}, {word: "whiff", sound: "wh"}, {word: "whine", sound: "wh"}, {word: "whirl", sound: "wh"}, {word: "whiz", sound: "wh"},
+            {word: "whim", sound: "wh"}, {word: "whinny", sound: "wh"}, {word: "whisper", sound: "wh"}, {word: "whistle", sound: "wh"}, {word: "why", sound: "wh"},
+            // PH words (20 words)
             {word: "phone", sound: "ph"}, {word: "photo", sound: "ph"}, {word: "graph", sound: "ph"}, {word: "phase", sound: "ph"}, {word: "phlox", sound: "ph"},
             {word: "dolphin", sound: "ph"}, {word: "trophy", sound: "ph"}, {word: "phantom", sound: "ph"}, {word: "orphan", sound: "ph"}, {word: "sphere", sound: "ph"},
+            {word: "phony", sound: "ph"}, {word: "phrase", sound: "ph"}, {word: "physic", sound: "ph"}, {word: "phobia", sound: "ph"}, {word: "phonic", sound: "ph"},
+            {word: "photon", sound: "ph"}, {word: "phyla", sound: "ph"}, {word: "nephew", sound: "ph"}, {word: "alphabet", sound: "ph"}, {word: "phew", sound: "ph"},
+            // NG words (20 words)
             {word: "ring", sound: "ng"}, {word: "sing", sound: "ng"}, {word: "song", sound: "ng"}, {word: "long", sound: "ng"}, {word: "wing", sound: "ng"},
             {word: "king", sound: "ng"}, {word: "hang", sound: "ng"}, {word: "bang", sound: "ng"}, {word: "lung", sound: "ng"}, {word: "sung", sound: "ng"},
+            {word: "fang", sound: "ng"}, {word: "gang", sound: "ng"}, {word: "pang", sound: "ng"}, {word: "rang", sound: "ng"}, {word: "slang", sound: "ng"},
+            {word: "sting", sound: "ng"}, {word: "swing", sound: "ng"}, {word: "thing", sound: "ng"}, {word: "tong", sound: "ng"}, {word: "young", sound: "ng"},
+            // QU words (20 words)
             {word: "quit", sound: "qu"}, {word: "quiz", sound: "qu"}, {word: "quick", sound: "qu"}, {word: "quilt", sound: "qu"}, {word: "queen", sound: "qu"},
-            {word: "quack", sound: "qu"}, {word: "quest", sound: "qu"}, {word: "quill", sound: "qu"}, {word: "quart", sound: "qu"}, {word: "quite", sound: "qu"}
+            {word: "quack", sound: "qu"}, {word: "quest", sound: "qu"}, {word: "quill", sound: "qu"}, {word: "quart", sound: "qu"}, {word: "quite", sound: "qu"},
+            {word: "quake", sound: "qu"}, {word: "quark", sound: "qu"}, {word: "quartz", sound: "qu"}, {word: "quash", sound: "qu"}, {word: "quay", sound: "qu"},
+            {word: "queasy", sound: "qu"}, {word: "quell", sound: "qu"}, {word: "quench", sound: "qu"}, {word: "query", sound: "qu"}, {word: "quip", sound: "qu"}
         ];
 
         let currentIndex = 0;
@@ -146,12 +169,12 @@
 
         // Audio System
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playBeep(freq, type = 'sine', duration = 0.1) {
+        function playBeep(freq, type = 'sine', duration = 0.1, volume = 0.1) {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = type;
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.setValueAtTime(volume, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
@@ -173,7 +196,13 @@
             playBeep(600, 'sine', 0.05);
         }
 
-        // Theme Toggle
+        function playSuccessSound() {
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C-E-G-C
+            notes.forEach((freq, i) => {
+                setTimeout(() => playBeep(freq, 'square', 0.4, 0.05), i * 100);
+            });
+        }
+
         function toggleTheme() {
             playClick();
             document.documentElement.classList.toggle('dark');
@@ -190,7 +219,6 @@
             mainWordEl.style.fontSize = `${currentFontSize}px`;
         }
 
-        // Speech
         const synth = window.speechSynthesis;
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition = null;
@@ -199,7 +227,7 @@
             recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.lang = 'en-US';
-            recognition.interimResults = false;
+            recognition.interimResults = true; 
             recognition.maxAlternatives = 5;
 
             recognition.onresult = (event) => {
@@ -207,17 +235,25 @@
                 let foundMatch = false;
                 let topResult = "";
 
-                for (let i = 0; i < event.results[0].length; i++) {
-                    const transcript = event.results[0][i].transcript.toLowerCase().trim();
-                    if (i === 0) topResult = transcript;
-                    if (transcript === target || transcript.includes(target)) {
-                        foundMatch = true;
-                        break;
+                for (let i = 0; i < event.results.length; i++) {
+                    for (let j = 0; j < event.results[i].length; j++) {
+                        const transcript = event.results[i][j].transcript.toLowerCase().trim();
+                        if (i === 0 && j === 0) topResult = transcript;
+                        
+                        if (transcript === target || transcript.split(' ').includes(target)) {
+                            foundMatch = true;
+                            break;
+                        }
                     }
+                    if (foundMatch) break;
                 }
                 
-                if (foundMatch) handleSuccess();
-                else handleFailure(topResult);
+                if (foundMatch) {
+                    recognition.stop();
+                    handleSuccess();
+                } else if (event.results[0].isFinal) {
+                    handleFailure(topResult);
+                }
             };
 
             recognition.onend = () => {
@@ -226,8 +262,7 @@
             };
 
             recognition.onerror = (e) => {
-                if(e.error === 'no-speech') feedbackEl.textContent = "I didn't hear anything! Try again.";
-                else feedbackEl.textContent = "Mic error. Please try again.";
+                if(e.error !== 'no-speech') feedbackEl.textContent = "Mic error. Please try again.";
                 stopRecognitionUI();
             };
         }
@@ -235,7 +270,7 @@
         function handleMicClick() {
             if (isListening) {
                 playStopMic();
-                recognition.stop(); // This triggers onresult/onend immediately
+                recognition.stop();
             } else {
                 startSpeaking();
             }
@@ -248,10 +283,10 @@
             }
             playStartMic();
             isListening = true;
-            feedbackEl.textContent = "Listening... Tap mic again to finish!";
+            feedbackEl.textContent = "Listening...";
             feedbackEl.className = "text-xl font-bold text-red-500 animate-pulse text-center px-4 h-14 flex items-center";
             speakBtn.classList.add('listen-pulse');
-            micBtnText.textContent = "DONE!";
+            micBtnText.textContent = "LISTENING";
             recognition.start();
         }
 
@@ -288,13 +323,17 @@
         function handleSuccess() {
             stars++;
             starEl.textContent = stars;
+            playSuccessSound();
             feedbackEl.textContent = "Awesome! Correct!";
             feedbackEl.className = "text-xl font-bold text-green-500 text-center px-4 h-14 flex items-center";
             document.getElementById('modalMsg').textContent = `You said "${words[currentIndex].word}" perfectly!`;
             openModal();
-            const utter = new SpeechSynthesisUtterance("Great job!");
-            utter.pitch = 1.5;
-            synth.speak(utter);
+            
+            setTimeout(() => {
+                const utter = new SpeechSynthesisUtterance("Great job!");
+                utter.pitch = 1.5;
+                synth.speak(utter);
+            }, 600);
         }
 
         function handleFailure(heard) {
